@@ -1,6 +1,35 @@
 import { Note, Folder } from '@/lib/db';
 import { useAppStore, useSyncStore } from '@/lib/store';
 
+// Helper function to safely parse JSON responses
+async function safeParseResponse(response: Response): Promise<any> {
+  try {
+    // Check if content type is JSON
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json();
+    } else {
+      // For non-JSON responses, get text and create an error object
+      const text = await response.text();
+      // If it looks like HTML (probably a redirect or error page)
+      if (text.includes('<!DOCTYPE html>') || text.includes('<html>')) {
+        return { error: 'Received HTML response instead of JSON' };
+      }
+      return { error: text || 'Unexpected response format' };
+    }
+  } catch (error) {
+    console.error('Error parsing response:', error);
+    return { error: 'Failed to parse server response' };
+  }
+}
+
+// Helper function to handle API errors
+async function handleApiError(response: Response, defaultMessage: string): Promise<never> {
+  const errorData = await safeParseResponse(response);
+  const errorMessage = errorData?.error || defaultMessage;
+  throw new Error(errorMessage);
+}
+
 // Auth API functions
 export async function loginWithPin(pin: string): Promise<void> {
   const response = await fetch('/api/auth/pin', {
@@ -12,8 +41,7 @@ export async function loginWithPin(pin: string): Promise<void> {
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to login');
+    await handleApiError(response, 'Failed to login');
   }
 }
 
@@ -28,8 +56,7 @@ export async function setupPin(pin: string): Promise<void> {
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to setup PIN');
+    await handleApiError(response, 'Failed to setup PIN');
   }
 }
 
@@ -38,22 +65,20 @@ export async function fetchNotes(): Promise<Note[]> {
   const response = await fetch('/api/notes');
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to fetch notes');
+    await handleApiError(response, 'Failed to fetch notes');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function fetchNote(id: number): Promise<Note> {
   const response = await fetch(`/api/notes/${id}`);
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to fetch note');
+    await handleApiError(response, 'Failed to fetch note');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function createNote(note: Partial<Note>, folderIds?: number[]): Promise<Note> {
@@ -66,11 +91,10 @@ export async function createNote(note: Partial<Note>, folderIds?: number[]): Pro
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to create note');
+    await handleApiError(response, 'Failed to create note');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function updateNote(id: number, updates: Partial<Note>, folderIds?: number[]): Promise<Note> {
@@ -83,11 +107,10 @@ export async function updateNote(id: number, updates: Partial<Note>, folderIds?:
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to update note');
+    await handleApiError(response, 'Failed to update note');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function deleteNote(id: number): Promise<void> {
@@ -96,8 +119,7 @@ export async function deleteNote(id: number): Promise<void> {
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to delete note');
+    await handleApiError(response, 'Failed to delete note');
   }
 }
 
@@ -106,22 +128,20 @@ export async function fetchFolders(): Promise<Folder[]> {
   const response = await fetch('/api/folders');
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to fetch folders');
+    await handleApiError(response, 'Failed to fetch folders');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function fetchFolder(id: number): Promise<Folder> {
   const response = await fetch(`/api/folders/${id}`);
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to fetch folder');
+    await handleApiError(response, 'Failed to fetch folder');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function createFolder(folder: Partial<Folder>, noteIds?: number[]): Promise<Folder> {
@@ -134,11 +154,10 @@ export async function createFolder(folder: Partial<Folder>, noteIds?: number[]):
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to create folder');
+    await handleApiError(response, 'Failed to create folder');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function updateFolder(id: number, updates: Partial<Folder>, noteIds?: number[]): Promise<Folder> {
@@ -151,11 +170,10 @@ export async function updateFolder(id: number, updates: Partial<Folder>, noteIds
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to update folder');
+    await handleApiError(response, 'Failed to update folder');
   }
   
-  return response.json();
+  return await safeParseResponse(response);
 }
 
 export async function deleteFolder(id: number): Promise<void> {
@@ -164,8 +182,7 @@ export async function deleteFolder(id: number): Promise<void> {
   });
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to delete folder');
+    await handleApiError(response, 'Failed to delete folder');
   }
 }
 
