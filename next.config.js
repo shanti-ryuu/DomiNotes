@@ -6,18 +6,14 @@ const withPWA = require('next-pwa')({
 
 module.exports = withPWA({
   reactStrictMode: true,
-  // Temporarily ignore ESLint errors during build to ensure deployment succeeds
+  // Temporarily ignore ESLint errors during build
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Config for production deployment
-  // Ensure correct handling of API routes
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: '/api/:path*',
-      },
-    ];
+  // Optimized for Netlify deployment
+  // trailingSlash and unoptimized images help with static hosting
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
   },
 });
