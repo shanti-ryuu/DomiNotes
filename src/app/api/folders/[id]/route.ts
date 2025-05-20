@@ -12,7 +12,7 @@ const folderUpdateSchema = z.object({
 
 // Get a specific folder
 export async function GET(
-  request: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   // Check authentication
@@ -69,7 +69,7 @@ export async function GET(
 
 // Update a folder
 export async function PUT(
-  request: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   // Check authentication
@@ -184,7 +184,7 @@ export async function PUT(
 
 // Delete a folder
 export async function DELETE(
-  request: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   // Check authentication

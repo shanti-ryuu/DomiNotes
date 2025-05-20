@@ -13,7 +13,7 @@ const noteUpdateSchema = z.object({
 
 // Get a specific note
 export async function GET(
-  request: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   // Check authentication
@@ -70,7 +70,7 @@ export async function GET(
 
 // Update a note
 export async function PUT(
-  request: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   // Check authentication
@@ -174,7 +174,7 @@ export async function PUT(
 
 // Delete a note
 export async function DELETE(
-  request: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   // Check authentication

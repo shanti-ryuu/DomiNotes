@@ -10,10 +10,7 @@ module.exports = withPWA({
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Help Vercel understand your project structure
-  experimental: {
-    appDir: true,
-  },
+  // Config for production deployment
   // Ensure correct handling of API routes
   async rewrites() {
     return [
