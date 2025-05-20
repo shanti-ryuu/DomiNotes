@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation'; // Unused import
 import { ExtendedNote, ExtendedFolder } from '@/lib/types';
 import { useAppStore } from '@/lib/store';
 import { fetchNotes, fetchFolders } from '@/lib/api';
@@ -16,9 +16,9 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ initialNotes, initialFolders }: DashboardProps) {
-  const router = useRouter();
+  // const router = useRouter(); // Unused - removed for ESLint
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Used in refreshData
   
   // Get global state from store
   const { 
@@ -80,7 +80,12 @@ export default function Dashboard({ initialNotes, initialFolders }: DashboardPro
   };
   
   return (
-    <div className="flex flex-col h-screen bg-gray-50 text-gray-800">
+    <div className="flex flex-col h-screen bg-white dark:bg-slate-900 text-black dark:text-white overflow-hidden relative">
+      {isLoading && (
+        <div className="absolute top-14 right-4 z-50">
+          <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      )}
       <Header 
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
         isOnline={isOnline}

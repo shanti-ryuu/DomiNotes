@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { db, notes, folders } from '@/lib/db';
-import { desc, eq } from 'drizzle-orm';
+import { desc } from 'drizzle-orm';
 import DashboardComponent from '@/components/dashboard/Dashboard';
 import { Metadata } from 'next';
 

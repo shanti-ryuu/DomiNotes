@@ -141,9 +141,17 @@ export default function LoginPage() {
                   `}
                   onClick={() => {
                     if (num === 'del') {
-                      isSetup && confirmPin.length > 0 ? handleConfirmPinDelete() : handlePinDelete();
+                      if (isSetup && confirmPin.length > 0) {
+                        handleConfirmPinDelete();
+                      } else {
+                        handlePinDelete();
+                      }
                     } else if (num !== '') {
-                      isSetup && pin.length === 4 ? handleConfirmPinInput(num.toString()) : handlePinInput(num.toString());
+                      if (isSetup && pin.length === 4) {
+                        handleConfirmPinInput(num.toString());
+                      } else {
+                        handlePinInput(num.toString());
+                      }
                     }
                   }}
                   disabled={num === ''}

@@ -4,14 +4,14 @@ import { persist } from 'zustand/middleware';
 
 interface SyncState {
   pendingChanges: {
-    notes: Record<string, { type: 'create' | 'update' | 'delete', data: any }>;
-    folders: Record<string, { type: 'create' | 'update' | 'delete', data: any }>;
+    notes: Record<string, { type: 'create' | 'update' | 'delete', data: Record<string, unknown> }>;
+    folders: Record<string, { type: 'create' | 'update' | 'delete', data: Record<string, unknown> }>;
   };
   addPendingChange: (
     entityType: 'notes' | 'folders',
     id: string,
     changeType: 'create' | 'update' | 'delete',
-    data: any
+    data: Record<string, unknown>
   ) => void;
   removePendingChange: (entityType: 'notes' | 'folders', id: string) => void;
   clearPendingChanges: () => void;

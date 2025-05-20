@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db, notes, notesAndFolders } from '@/lib/db';
 import { cookies } from 'next/headers';
-import { and, eq } from 'drizzle-orm';
+// No imports needed from drizzle-orm here
 import { z } from 'zod';
 
 // Schema for note validation

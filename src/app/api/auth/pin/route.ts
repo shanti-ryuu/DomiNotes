@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { setupPin, verifyPin } from '@/lib/auth';
 import { z } from 'zod';
-import { cookies } from 'next/headers';
 
 // Schema for PIN validation
 const pinSchema = z.object({

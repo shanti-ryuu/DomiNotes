@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Folder } from '@/lib/db';
+// import { Folder } from '@/lib/db'; // Unused - removed for ESLint
 import { ExtendedNote } from '@/lib/types';
 import { useAppStore, useSyncStore } from '@/lib/store';
 import { createNote, updateNote, deleteNote } from '@/lib/api';
@@ -24,7 +24,7 @@ export default function NoteEditor({ note }: NoteEditorProps) {
   const folderSelectRef = useRef<HTMLDivElement>(null);
   
   const { 
-    notes,
+    // notes, // Unused - removed for ESLint
     folders, 
     updateNote: updateNoteInStore, 
     deleteNote: deleteNoteInStore,
