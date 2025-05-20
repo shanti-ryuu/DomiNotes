@@ -4,20 +4,29 @@ export function middleware(request: NextRequest) {
   // Get the path of the request
   const path = request.nextUrl.pathname;
   
-  // Define public paths that don't require authentication
-  const isPublicPath = path === '/login' || path === '/api/auth/pin';
+  // Define public paths that don't require authentication - handle trailing slashes
+  const isPublicPath = 
+    path === '/login' || 
+    path === '/login/' || 
+    path.startsWith('/api/auth/pin') || 
+    path === '/_next' || 
+    path.startsWith('/_next/');
   
   // Get the authentication cookie directly
   const authenticated = request.cookies.get('authenticated')?.value === 'true';
   
-  // Redirect unauthenticated users to login
-  if (!isPublicPath && !authenticated) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-  
-  // Redirect authenticated users away from login
-  if (isPublicPath && authenticated) {
-    return NextResponse.redirect(new URL('/', request.url));
+  // Only apply middleware logic to relevant paths
+  // Skip static files, API routes, etc.
+  if (!path.startsWith('/api/') && !path.includes('.') && !path.startsWith('/_next/')) {
+    // Redirect unauthenticated users to login
+    if (!isPublicPath && !authenticated) {
+      return NextResponse.redirect(new URL('/login/', request.url));
+    }
+    
+    // Redirect authenticated users away from login
+    if ((path === '/login' || path === '/login/') && authenticated) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
   }
   
   return NextResponse.next();
@@ -28,12 +37,13 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     * - Images and other assets
+     * - /api routes (except /api/auth/pin which needs special handling)
+     * - /_next (static files, images, etc.)
+     * - favicon.ico, manifest.json, sw.js (PWA related files)
+     * - Files with extensions (.svg, .jpg, etc)
+     * - Static asset folders
      */
-    '/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|icons/|images/|.*\\.png$).*)',
+    '/((?!api/(?!auth/pin)|_next|favicon\.ico|manifest\.json|sw\.js|\.[^/]+$|icons/|images/).*)',
+    '/api/auth/pin/:path*',
   ],
 };
