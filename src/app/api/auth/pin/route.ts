@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { setupPin, verifyPin } from '@/lib/auth';
+import { setupPin, verifyPin, generateUserId } from '@/lib/auth';
 import { z } from 'zod';
+import { supabase } from '@/lib/supabase';
 
 // This is read by the Next.js compiler
 export const config = {
@@ -27,6 +28,9 @@ export async function POST(request: Request) {
     
     const { pin } = result.data;
     
+    // Generate a unique user ID based on the PIN
+    const userId = generateUserId(pin);
+    
     // Check if this is a login attempt or setup
     const isSetup = request.headers.get('x-action') === 'setup';
     
@@ -34,16 +38,26 @@ export async function POST(request: Request) {
       // Setup new PIN
       await setupPin(pin);
       
-      // Create response and set cookie
+      // Create response and set cookies
       const response = NextResponse.json(
         { message: "PIN successfully set" },
         { status: 200 }
       );
       
-      // Set cookie that expires in 7 days
+      // Set authentication cookie that expires in 7 days
       response.cookies.set({
         name: 'authenticated',
         value: 'true',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/',
+      });
+      
+      // Set user ID cookie for database operations
+      response.cookies.set({
+        name: 'userId',
+        value: userId,
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 24 * 7, // 7 days
@@ -56,16 +70,26 @@ export async function POST(request: Request) {
       const isValid = await verifyPin(pin);
       
       if (isValid) {
-        // Create response and set cookie
+        // Create response and set cookies
         const response = NextResponse.json(
           { message: "Login successful" },
           { status: 200 }
         );
         
-        // Set cookie that expires in 7 days
+        // Set authentication cookie that expires in 7 days
         response.cookies.set({
           name: 'authenticated',
           value: 'true',
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: '/',
+        });
+        
+        // Set user ID cookie for database operations
+        response.cookies.set({
+          name: 'userId',
+          value: userId,
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           maxAge: 60 * 60 * 24 * 7, // 7 days

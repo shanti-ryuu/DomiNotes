@@ -1,13 +1,34 @@
 import { NextResponse } from 'next/server';
-import { db, notes, notesAndFolders } from '@/lib/db';
+import { db, Note, notes } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
+import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
-// No imports needed from drizzle-orm here
-import { z } from 'zod';
 
-// This is read by the Next.js compiler
-export const config = {
-  runtime: 'edge',
-};
+export const runtime = 'edge';
+
+// Function to safely parse JSON
+async function safeParseJSON(response: Response) {
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    try {
+      return await response.json();
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      return { error: 'Failed to parse response' };
+    }
+  } else {
+    const text = await response.text();
+    console.error('Unexpected content type:', contentType, 'Content:', text);
+    return { error: 'Unexpected response format' };
+  }
+}
+
+// Helper to get user ID from cookies
+function getUserId() {
+  // For this example, we'll use a simple user ID from cookies
+  // In a real app, you would use proper authentication
+  return cookies().get('userId')?.value || 'anonymous-user';
+}
 
 // Schema for note validation
 const noteSchema = z.object({
