@@ -10,7 +10,17 @@ export function middleware(request: NextRequest) {
     path === '/login/' || 
     path.startsWith('/api/auth/pin') || 
     path === '/_next' || 
-    path.startsWith('/_next/');
+    path.startsWith('/_next/') ||
+    path.includes('favicon.ico') ||
+    path.includes('manifest.json');
+    
+  // Don't redirect API calls - this prevents the DOCTYPE error when fetching
+  const isApiPath = path.startsWith('/api/');
+  
+  // Skip middleware for API paths except auth
+  if (isApiPath && !path.startsWith('/api/auth')) {
+    return NextResponse.next();
+  }
   
   // Get the authentication cookie directly
   const authenticated = request.cookies.get('authenticated')?.value === 'true';

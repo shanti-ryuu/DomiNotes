@@ -3,23 +3,37 @@ import { useAppStore, useSyncStore } from '@/lib/store';
 
 // Helper function to safely parse JSON responses
 async function safeParseResponse(response: Response): Promise<any> {
-  try {
-    // Check if content type is JSON
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      return await response.json();
-    } else {
-      // For non-JSON responses, get text and create an error object
+  const contentType = response.headers.get('content-type');
+  const isJson = contentType && contentType.includes('application/json');
+
+  // For non-JSON responses or if there's no content-type
+  if (!isJson) {
+    try {
+      // First try to peek at the response to see if it's HTML
       const text = await response.text();
-      // If it looks like HTML (probably a redirect or error page)
-      if (text.includes('<!DOCTYPE html>') || text.includes('<html>')) {
-        return { error: 'Received HTML response instead of JSON' };
+      if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+        console.warn('Received HTML instead of expected JSON');
+        return { error: 'Auth redirect occurred - please login again' };
       }
-      return { error: text || 'Unexpected response format' };
+      
+      // If it's not HTML, try to parse it as JSON anyway
+      try {
+        return JSON.parse(text);
+      } catch {
+        return { error: text || 'Unexpected response format' };
+      }
+    } catch (error) {
+      console.error('Error handling response:', error);
+      return { error: 'Failed to process response' };
     }
+  }
+  
+  // If it's JSON content-type, parse normally
+  try {
+    return await response.json();
   } catch (error) {
-    console.error('Error parsing response:', error);
-    return { error: 'Failed to parse server response' };
+    console.error('Error parsing JSON response:', error);
+    return { error: 'Failed to parse JSON response' };
   }
 }
 

@@ -135,7 +135,7 @@ export default function LoginPage() {
                   key={index}
                   type="button"
                   className={`
-                    h-14 rounded-md flex items-center justify-center text-xl font-medium
+                    h-14 rounded-md flex items-center justify-center text-xl font-bold
                     ${num === 'del' ? 'bg-gray-200 hover:bg-gray-300' : 'bg-gray-100 hover:bg-gray-200'}
                     ${num === '' ? 'cursor-default' : 'cursor-pointer'}
                   `}
