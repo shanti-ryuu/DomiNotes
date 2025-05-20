@@ -8,7 +8,22 @@
   NPM_FLAGS = "--legacy-peer-deps"
   NEXT_TELEMETRY_DISABLED = "1"
 
-[[plugins]]
+# Improve build performance
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["node_modules/@neondatabase/serverless/**"]
+
+# Handle API routes and SPA behavior
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
   package = "@netlify/plugin-nextjs"
 
 [[headers]]
