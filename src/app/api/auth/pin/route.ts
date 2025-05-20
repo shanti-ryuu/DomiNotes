@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { setupPin, verifyPin, generateUserId } from '@/lib/auth';
 import { z } from 'zod';
-import { supabase } from '@/lib/supabase';
+// Import but don't use directly during initialization
+// We'll check if it's available at runtime instead
+import '@/lib/supabase';
 
 // This is read by the Next.js compiler
 export const config = {

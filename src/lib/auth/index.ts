@@ -18,8 +18,8 @@ export async function setupPin(pin: string): Promise<void> {
   const hashedPin = await hashPin(pin);
   
   // First try to use Supabase
-  try {
-    if (supabase) {
+  if (typeof window !== 'undefined' && supabase) { // Only try Supabase in browser
+    try {
       // Check if a PIN already exists
       const { data: existingPins } = await supabase
         .from('pin_auth')
@@ -43,13 +43,12 @@ export async function setupPin(pin: string): Promise<void> {
           });
       }
       return;
+    } catch (error) {
+      console.error('Error using Supabase for PIN auth:', error);
     }
-  } catch (error) {
-    console.error('Error using Supabase for PIN auth:', error);
   }
   
-  // Fallback to the original database if Supabase fails
-  console.log('Falling back to original database for PIN auth');
+  // Fallback to the original database
   try {
     // Check if a PIN already exists
     const existingPins = await db.select().from(pinAuth);
@@ -76,9 +75,9 @@ export async function setupPin(pin: string): Promise<void> {
 
 // Verify the PIN using Supabase
 export async function verifyPin(pin: string): Promise<boolean> {
-  // First try to use Supabase
-  try {
-    if (supabase) {
+  // First try to use Supabase in browser environment only
+  if (typeof window !== 'undefined' && supabase) {
+    try {
       const { data: pins } = await supabase
         .from('pin_auth')
         .select('pin');
@@ -88,13 +87,12 @@ export async function verifyPin(pin: string): Promise<boolean> {
       }
       
       return await comparePin(pin, pins[0].pin);
+    } catch (error) {
+      console.error('Error using Supabase for PIN verification:', error);
     }
-  } catch (error) {
-    console.error('Error using Supabase for PIN verification:', error);
   }
   
-  // Fallback to the original database if Supabase fails
-  console.log('Falling back to original database for PIN verification');
+  // Fallback to the original database
   try {
     const pins = await db.select().from(pinAuth);
     
