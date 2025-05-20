@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { setupPin, verifyPin } from '@/lib/auth';
 import { z } from 'zod';
 
@@ -7,7 +7,7 @@ const pinSchema = z.object({
   pin: z.string().length(4).regex(/^\d{4}$/, "PIN must be exactly 4 digits")
 });
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     

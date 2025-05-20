@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { db, folders, notesAndFolders } from '@/lib/db';
 import { cookies } from 'next/headers';
 import { eq } from 'drizzle-orm';
@@ -11,10 +11,7 @@ const folderUpdateSchema = z.object({
 });
 
 // Get a specific folder
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, { params }: { params: { id: string } }) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');
@@ -68,10 +65,7 @@ export async function GET(
 }
 
 // Update a folder
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');
@@ -183,10 +177,7 @@ export async function PUT(
 }
 
 // Delete a folder
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');

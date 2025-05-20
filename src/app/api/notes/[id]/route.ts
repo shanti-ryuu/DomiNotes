@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { db, notes, notesAndFolders } from '@/lib/db';
 import { cookies } from 'next/headers';
 import { eq } from 'drizzle-orm';
@@ -12,10 +12,7 @@ const noteUpdateSchema = z.object({
 });
 
 // Get a specific note
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, { params }: { params: { id: string } }) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');
@@ -69,10 +66,7 @@ export async function GET(
 }
 
 // Update a note
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');
@@ -173,10 +167,7 @@ export async function PUT(
 }
 
 // Delete a note
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');

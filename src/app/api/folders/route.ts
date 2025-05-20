@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { db, folders } from '@/lib/db';
 import { cookies } from 'next/headers';
 import { eq } from 'drizzle-orm';
@@ -48,7 +48,7 @@ export async function GET() {
 }
 
 // Create a new folder
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');

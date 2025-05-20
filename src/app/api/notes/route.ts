@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { db, notes, notesAndFolders } from '@/lib/db';
 import { cookies } from 'next/headers';
 // No imports needed from drizzle-orm here
@@ -55,7 +55,7 @@ export async function GET() {
 }
 
 // Create a new note
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     // Check authentication directly from cookies
     const cookieStore = await cookies();
