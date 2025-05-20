@@ -8,8 +8,7 @@ module.exports = withPWA({
   reactStrictMode: true,
   // Completely disable type checking during build for Netlify compatibility
   typescript: {
-    ignoreBuildErrors: true,
-    tsconfigPath: false,
+    ignoreBuildErrors: true
   },
   // Disable ESLint during build
   eslint: {
