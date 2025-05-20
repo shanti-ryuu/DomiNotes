@@ -1,22 +1,23 @@
+/** @type {import('next').NextConfig} */
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
 });
 
-module.exports = withPWA({
+const nextConfig = {
   reactStrictMode: true,
-  // Completely disable type checking during build for Netlify compatibility
-  typescript: {
-    ignoreBuildErrors: true
-  },
-  // Disable ESLint during build
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Optimized for Netlify deployment
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   trailingSlash: true,
   images: {
     unoptimized: true,
-  },
-});
+  }
+};
+
+module.exports = withPWA(nextConfig);
