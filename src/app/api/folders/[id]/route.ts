@@ -12,8 +12,8 @@ const folderUpdateSchema = z.object({
 
 // Get a specific folder
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   // Check authentication
   const cookieStore = await cookies();
@@ -24,7 +24,7 @@ export async function GET(
   }
 
   try {
-    const id = parseInt(context.params.id);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -69,8 +69,8 @@ export async function GET(
 
 // Update a folder
 export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   // Check authentication
   const cookieStore = await cookies();
@@ -81,7 +81,7 @@ export async function PUT(
   }
 
   try {
-    const id = parseInt(context.params.id);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -184,8 +184,8 @@ export async function PUT(
 
 // Delete a folder
 export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   // Check authentication
   const cookieStore = await cookies();
@@ -196,7 +196,7 @@ export async function DELETE(
   }
 
   try {
-    const id = parseInt(context.params.id);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(

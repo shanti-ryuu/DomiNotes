@@ -13,8 +13,8 @@ const noteUpdateSchema = z.object({
 
 // Get a specific note
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   // Check authentication
   const cookieStore = await cookies();
@@ -25,7 +25,7 @@ export async function GET(
   }
 
   try {
-    const id = parseInt(context.params.id);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -70,8 +70,8 @@ export async function GET(
 
 // Update a note
 export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   // Check authentication
   const cookieStore = await cookies();
@@ -82,7 +82,7 @@ export async function PUT(
   }
 
   try {
-    const id = parseInt(context.params.id);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -174,8 +174,8 @@ export async function PUT(
 
 // Delete a note
 export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   // Check authentication
   const cookieStore = await cookies();
@@ -186,7 +186,7 @@ export async function DELETE(
   }
 
   try {
-    const id = parseInt(context.params.id);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
