@@ -11,7 +11,10 @@ const folderUpdateSchema = z.object({
 });
 
 // Get a specific folder
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  context: { params: Record<string, string> }
+) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');
@@ -21,7 +24,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(context.params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -65,7 +68,10 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // Update a folder
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  context: { params: Record<string, string> }
+) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');
@@ -75,7 +81,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(context.params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -177,7 +183,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // Delete a folder
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  context: { params: Record<string, string> }
+) {
   // Check authentication
   const cookieStore = await cookies();
   const authCookie = cookieStore.get('authenticated');
@@ -187,7 +196,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   }
 
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(context.params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
