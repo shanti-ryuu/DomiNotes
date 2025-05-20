@@ -4,6 +4,11 @@ import { cookies } from 'next/headers';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
+// This is read by the Next.js compiler
+export const config = {
+  runtime: 'edge',
+};
+
 // Schema for folder validation
 const folderSchema = z.object({
   name: z.string().min(1, "Folder name is required")

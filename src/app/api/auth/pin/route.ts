@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import { setupPin, verifyPin } from '@/lib/auth';
 import { z } from 'zod';
 
+// This is read by the Next.js compiler
+export const config = {
+  runtime: 'edge',
+};
+
 // Schema for PIN validation
 const pinSchema = z.object({
   pin: z.string().length(4).regex(/^\d{4}$/, "PIN must be exactly 4 digits")

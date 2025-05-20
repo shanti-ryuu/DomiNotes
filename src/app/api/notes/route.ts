@@ -4,6 +4,11 @@ import { cookies } from 'next/headers';
 // No imports needed from drizzle-orm here
 import { z } from 'zod';
 
+// This is read by the Next.js compiler
+export const config = {
+  runtime: 'edge',
+};
+
 // Schema for note validation
 const noteSchema = z.object({
   title: z.string().min(1, "Title is required"),

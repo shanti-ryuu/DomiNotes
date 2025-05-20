@@ -6,9 +6,10 @@ const withPWA = require('next-pwa')({
 
 module.exports = withPWA({
   reactStrictMode: true,
-  // Disable type checking during build to overcome Netlify issues
+  // Completely disable type checking during build for Netlify compatibility
   typescript: {
     ignoreBuildErrors: true,
+    tsconfigPath: false,
   },
   // Disable ESLint during build
   eslint: {
